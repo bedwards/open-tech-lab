@@ -34,6 +34,11 @@ export default [
         crypto: 'readonly',
         caches: 'readonly',
         clearInterval: 'readonly',
+        // Service Worker globals
+        self: 'readonly',
+        ExtendableEvent: 'readonly',
+        FetchEvent: 'readonly',
+        SyncEvent: 'readonly',
         // Cloudflare Workers globals
         KVNamespace: 'readonly',
         DurableObjectState: 'readonly',

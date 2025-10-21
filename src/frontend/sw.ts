@@ -1,15 +1,20 @@
+/* eslint-env serviceworker */
 /// <reference lib="webworker" />
+
+interface SyncEvent extends ExtendableEvent {
+  tag: string;
+}
+
+const sw = self as unknown as ServiceWorkerGlobalScope;
 
 const CACHE_NAME = 'open-tech-lab-v1';
 const STATIC_CACHE = ['/', '/index.html', '/src/frontend/main.ts', '/src/frontend/styles/main.css'];
 
-declare const self: ServiceWorkerGlobalScope;
-
-self.addEventListener('install', (event) => {
+sw.addEventListener('install', (event: ExtendableEvent) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_CACHE)));
 });
 
-self.addEventListener('activate', (event) => {
+sw.addEventListener('activate', (event: ExtendableEvent) => {
   event.waitUntil(
     caches
       .keys()
@@ -21,7 +26,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-self.addEventListener('fetch', (event) => {
+sw.addEventListener('fetch', (event: FetchEvent) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
       if (response) {
@@ -44,13 +49,13 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'sync-projects') {
-    event.waitUntil(syncProjects());
+sw.addEventListener('sync', (event) => {
+  const syncEvent = event as unknown as SyncEvent;
+  if (syncEvent.tag === 'sync-projects') {
+    syncEvent.waitUntil(syncProjects());
   }
 });
 
 async function syncProjects(): Promise<void> {
-  // Sync pending changes when back online
   console.log('Syncing projects...');
 }

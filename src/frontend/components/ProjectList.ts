@@ -84,11 +84,12 @@ export class ProjectList {
         await this.appwrite.createProject(project);
       } else {
         const id = crypto.randomUUID();
+        const now = new Date().toISOString();
         await this.storage.saveProject({
           ...project,
           id,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          createdAt: now,
+          updatedAt: now,
         });
         await this.storage.addPendingSync('create', id, project);
       }

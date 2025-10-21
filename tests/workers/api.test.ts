@@ -26,7 +26,7 @@ describe('Worker API', () => {
     });
 
     expect(response.ok).toBe(true);
-    const result = await response.json();
+    const result = (await response.json()) as { success: boolean; output: string };
     expect(result.success).toBe(true);
   });
 
@@ -43,8 +43,7 @@ describe('Worker API', () => {
 
     const response = await fetch('http://localhost:8787/api/analytics');
     expect(response.ok).toBe(true);
-    const data = await response.json();
-    expect(data).toBeDefined();
+    const data = (await response.json()) as { visits: number; users: number; projects: number };
     expect(data.visits).toBeDefined();
   });
 });

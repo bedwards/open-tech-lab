@@ -1,4 +1,4 @@
-import { AppwriteService } from './appwrite';
+import { AppwriteService, Project } from './appwrite';
 import { StorageService } from './storage';
 
 export class SyncService {
@@ -32,10 +32,12 @@ export class SyncService {
       try {
         switch (item.action) {
           case 'create':
-            await this.appwrite.createProject(item.data);
+            await this.appwrite.createProject(
+              item.data as Omit<Project, 'id' | 'createdAt' | 'updatedAt'>
+            );
             break;
           case 'update':
-            await this.appwrite.updateProject(item.projectId, item.data);
+            await this.appwrite.updateProject(item.projectId, item.data as Partial<Project>);
             break;
           case 'delete':
             await this.appwrite.deleteProject(item.projectId);

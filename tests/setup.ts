@@ -71,4 +71,6 @@ if (!global.crypto) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   global.crypto = {} as any;
 }
-global.crypto.randomUUID = vi.fn(() => 'mock-uuid-' + Math.random());
+global.crypto.randomUUID = vi.fn(
+  () => `mock-uuid-${Math.random()}` as `${string}-${string}-${string}-${string}-${string}`
+);

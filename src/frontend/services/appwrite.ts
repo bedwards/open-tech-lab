@@ -1,4 +1,4 @@
-import { Client, Account, Databases, Storage, Functions, Realtime } from 'appwrite';
+import { Client, Account, Databases, Storage, Functions } from 'appwrite';
 
 export interface Project {
   id: string;
@@ -12,7 +12,7 @@ export interface Project {
 interface RealtimePayload {
   events: string[];
   channels: string[];
-  timestamp: string;
+  timestamp: number;
   payload: unknown;
 }
 
@@ -22,7 +22,6 @@ export class AppwriteService {
   private databases: Databases;
   private storage: Storage;
   private functions: Functions;
-  private realtime: Realtime;
 
   constructor() {
     this.client = new Client()
@@ -33,7 +32,6 @@ export class AppwriteService {
     this.databases = new Databases(this.client);
     this.storage = new Storage(this.client);
     this.functions = new Functions(this.client);
-    this.realtime = new Realtime(this.client);
   }
 
   async getCurrentUser() {
@@ -70,7 +68,7 @@ export class AppwriteService {
   }
 
   subscribeToProject(projectId: string, callback: (payload: RealtimePayload) => void) {
-    return this.realtime.subscribe(
+    return this.client.subscribe(
       `databases.main.collections.projects.documents.${projectId}`,
       callback
     );

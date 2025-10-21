@@ -5,10 +5,9 @@ import * as Y from 'yjs';
 interface RealtimeResponse {
   events: string[];
   channels: string[];
-  timestamp: string;
+  timestamp: number;
   payload: unknown;
 }
-
 export class CodeEditor {
   private yDoc: Y.Doc;
   private yText: Y.Text;
@@ -125,7 +124,6 @@ export class CodeEditor {
       if (navigator.onLine) {
         await this.appwrite.updateProject(this.currentProjectId, {
           files: { 'main.js': content },
-          updatedAt: new Date().toISOString(),
         });
       } else {
         await this.storage.saveProject({
@@ -150,14 +148,13 @@ export class CodeEditor {
     const code = textarea.value;
 
     try {
-      // Execute code in Cloudflare Worker sandbox
       const response = await fetch('/api/sandbox/execute', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),
       });
 
-      const result = await response.json();
+      const result = (await response.json()) as { output?: string; error?: string };
       const output = document.getElementById('output-content')!;
       output.textContent = result.output || result.error || 'No output';
     } catch (error) {

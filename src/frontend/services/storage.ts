@@ -5,6 +5,8 @@ interface ProjectData {
   name: string;
   description: string;
   files: Record<string, string>;
+  createdAt: string;
+  updatedAt: string;
   lastSynced: number;
   pendingChanges: boolean;
 }
@@ -25,6 +27,7 @@ interface OpenTechLabDB extends DBSchema {
   pendingSync: {
     key: string;
     value: PendingSyncData;
+    indexes: { timestamp: number };
   };
 }
 
@@ -47,11 +50,14 @@ export class StorageService {
 
   async saveProject(project: Partial<ProjectData> & { id: string }): Promise<void> {
     if (!this.db) await this.init();
+    const now = new Date().toISOString();
     await this.db!.put('projects', {
       ...project,
       name: project.name || '',
       description: project.description || '',
       files: project.files || {},
+      createdAt: project.createdAt || now,
+      updatedAt: project.updatedAt || now,
       lastSynced: Date.now(),
       pendingChanges: false,
     });
