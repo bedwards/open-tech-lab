@@ -5,6 +5,10 @@ import tsparser from '@typescript-eslint/parser';
 import prettier from 'eslint-plugin-prettier/recommended';
 
 export default [
+
+  {
+    ignores: ['dist/**', 'node_modules/**', '**/*.config.js'],
+  },
   /* -------------------------------------------------------
    *  ESLint recommended rules
    * ------------------------------------------------------- */
@@ -14,7 +18,7 @@ export default [
    *  TypeScript configuration
    * ------------------------------------------------------- */
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['src/**/*.ts', 'tests/**/*.ts'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
