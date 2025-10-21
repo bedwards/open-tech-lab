@@ -9,7 +9,6 @@ export class SandboxObject {
     const { code } = await request.json<{ code: string }>();
 
     try {
-      // Execute code in isolated environment
       const result = await this.executeCode(code);
 
       return new Response(
@@ -36,24 +35,66 @@ export class SandboxObject {
   }
 
   private async executeCode(code: string): Promise<string> {
-    // Sandboxed code execution
-    // In production, this would use QuickJS or AssemblyScript WASM
-
     const logs: string[] = [];
-    const customConsole = {
+
+    // Create safe console implementation
+    const safeConsole = {
       log: (...args: unknown[]) => {
-        logs.push(args.map(String).join(' '));
+        logs.push(
+          args
+            .map((arg) => {
+              if (typeof arg === 'object' && arg !== null) {
+                try {
+                  return JSON.stringify(arg, null, 2);
+                } catch {
+                  return String(arg);
+                }
+              }
+              return String(arg);
+            })
+            .join(' ')
+        );
       },
     };
 
-    try {
-      // Create isolated function
-      const fn = new Function('console', code);
-      fn(customConsole);
+    // Create a safe global context
+    const context = {
+      console: safeConsole,
+      Math,
+      JSON,
+      Array,
+      Object,
+      String,
+      Number,
+      Boolean,
+      Date,
+      RegExp,
+      Set,
+      Map,
+      Promise,
+    };
 
-      return logs.join('\n') || 'Code executed successfully';
+    try {
+      // Wrap user code in an async function with our context
+      const wrappedCode = `
+        return (async function() {
+          const { console, Math, JSON, Array, Object, String, Number, Boolean, Date, RegExp, Set, Map, Promise } = arguments[0];
+          ${code}
+        })(context);
+      `;
+
+      // Use AsyncFunction constructor (like Function but for async code)
+      const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+      const fn = new AsyncFunction('context', wrappedCode);
+
+      await fn(context);
+
+      return logs.join('\n') || 'Code executed successfully (no output)';
     } catch (error) {
-      throw new Error(`Execution error: ${error}`);
+      if (error instanceof Error) {
+        return `Error: ${error.message}`;
+      }
+      return `Error: ${String(error)}`;
     }
   }
 }

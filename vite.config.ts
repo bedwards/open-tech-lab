@@ -14,8 +14,8 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        // Remove the 'main' entry - Vite will auto-detect index.html
-        sw: resolve(__dirname, 'src/frontend/sw.ts'),
+        main: resolve(__dirname, 'src/frontend/index.html'),
+        playground: resolve(__dirname, 'src/frontend/playground.html'),
       },
     },
   },
