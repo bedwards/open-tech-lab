@@ -1,0 +1,59 @@
+{
+  "$id": "open-tech-lab",
+  "name": "Open Tech Lab",
+  "databases": [
+    {
+      "$id": "main",
+      "name": "Main Database",
+      "collections": [
+        {
+          "$id": "projects",
+          "name": "Projects",
+          "attributes": [
+            {
+              "key": "name",
+              "type": "string",
+              "size": 255,
+              "required": true
+            },
+            {
+              "key": "description",
+              "type": "string",
+              "size": 1000,
+              "required": false
+            },
+            {
+              "key": "files",
+              "type": "string",
+              "size": 100000,
+              "required": true
+            }
+          ],
+          "indexes": [
+            {
+              "key": "user_id",
+              "type": "key",
+              "attributes": ["userId"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "$id": "sync-handler",
+      "name": "Sync Handler",
+      "runtime": "node-18.0",
+      "entrypoint": "src/appwrite/functions/sync-handler/index.ts",
+      "events": ["databases.*.collections.*.documents.*"]
+    },
+    {
+      "$id": "backup",
+      "name": "Backup",
+      "runtime": "node-18.0",
+      "entrypoint": "src/appwrite/functions/backup/index.ts",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}

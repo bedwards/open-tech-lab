@@ -1,0 +1,29 @@
+app = "open-tech-lab-appwrite"
+primary_region = "ord"
+
+[build]
+  image = "appwrite/appwrite:1.6"
+
+[env]
+  _APP_ENV = "production"
+  _APP_LOCALE = "en"
+  _APP_OPTIONS_ABUSE = "enabled"
+  _APP_OPTIONS_FORCE_HTTPS = "enabled"
+  _APP_OPENSSL_KEY_V1 = "your-encryption-key"
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
+
+[[mounts]]
+  source = "appwrite_data"
+  destination = "/storage"
+  initial_size = "3gb"
