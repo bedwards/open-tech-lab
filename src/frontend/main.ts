@@ -43,7 +43,11 @@ class App {
     // Setup navigation
     this.setupNavigation();
 
-    // Check authentication
+    // TEMPORARY: Skip authentication for local dev
+    this.showAnalytics(); // Start on analytics page which works!
+
+    // Comment out auth check for now:
+    /*
     try {
       const user = await this.appwrite.getCurrentUser();
       if (user) {
@@ -54,6 +58,7 @@ class App {
     } catch {
       this.showLogin();
     }
+    */
 
     // Start sync service
     this.sync.start();

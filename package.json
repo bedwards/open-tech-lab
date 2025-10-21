@@ -6,8 +6,10 @@
   "scripts": {
     "dev:frontend": "vite",
     "dev:worker": "wrangler dev",
-    "dev:appwrite": "docker run -p 80:80 -p 443:443 appwrite/appwrite:1.6",
-    "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:worker\"",
+    "dev:appwrite": "docker compose -f docker-compose.appwrite.yml up",
+    "dev:appwrite:stop": "docker compose -f docker-compose.appwrite.yml down",
+    "dev:appwrite:clean": "docker compose -f docker-compose.appwrite.yml down -v",
+    "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:worker\" \"npm run dev:appwrite\"",
     "build": "tsc && vite build",
     "build:worker": "wrangler deploy --dry-run",
     "test": "vitest run",

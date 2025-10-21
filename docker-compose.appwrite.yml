@@ -1,0 +1,106 @@
+services:
+  appwrite:
+    image: appwrite/appwrite:1.6
+    container_name: open-tech-lab-appwrite
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - appwrite
+    environment:
+      _APP_ENV: development
+      _APP_LOCALE: en
+      _APP_OPTIONS_ABUSE: disabled
+      _APP_OPTIONS_FORCE_HTTPS: disabled
+      _APP_OPENSSL_KEY_V1: your-secret-key-change-this-in-production
+      _APP_DOMAIN: localhost
+      _APP_DOMAIN_TARGET: localhost
+      _APP_CONSOLE_WHITELIST_ROOT: enabled
+      _APP_CONSOLE_WHITELIST_EMAILS: ""
+      _APP_CONSOLE_WHITELIST_IPS: ""
+      _APP_SYSTEM_EMAIL_NAME: Appwrite
+      _APP_SYSTEM_EMAIL_ADDRESS: team@appwrite.io
+      _APP_SYSTEM_SECURITY_EMAIL_ADDRESS: security@appwrite.io
+      _APP_SYSTEM_RESPONSE_FORMAT: ""
+      _APP_REDIS_HOST: redis
+      _APP_REDIS_PORT: 6379
+      _APP_REDIS_USER: ""
+      _APP_REDIS_PASS: ""
+      _APP_DB_HOST: mariadb
+      _APP_DB_PORT: 3306
+      _APP_DB_SCHEMA: appwrite
+      _APP_DB_USER: user
+      _APP_DB_PASS: password
+      _APP_DB_ROOT_PASS: rootpassword
+      _APP_STORAGE_LIMIT: 30000000
+      _APP_FUNCTIONS_SIZE_LIMIT: 30000000
+      _APP_FUNCTIONS_TIMEOUT: 900
+      _APP_FUNCTIONS_BUILD_TIMEOUT: 900
+      _APP_FUNCTIONS_CPUS: 0
+      _APP_FUNCTIONS_MEMORY: 0
+      _APP_FUNCTIONS_RUNTIMES: node-16.0,node-18.0,php-8.0,php-8.1,python-3.9,python-3.10,ruby-3.0,ruby-3.1,deno-1.21,dart-2.15,.net-6.0
+      _APP_EXECUTOR_SECRET: your-executor-secret
+      _APP_EXECUTOR_HOST: http://appwrite-executor/v1
+      _APP_LOGGING_PROVIDER: ""
+      _APP_LOGGING_CONFIG: ""
+      _APP_MAINTENANCE_INTERVAL: 86400
+      _APP_MAINTENANCE_RETENTION_EXECUTION: 1209600
+      _APP_MAINTENANCE_RETENTION_CACHE: 2592000
+      _APP_MAINTENANCE_RETENTION_ABUSE: 86400
+      _APP_MAINTENANCE_RETENTION_AUDIT: 1209600
+      _APP_MAINTENANCE_RETENTION_USAGE_HOURLY: 8640000
+      _APP_SMS_PROVIDER: ""
+      _APP_SMS_FROM: ""
+      _APP_GRAPHQL_MAX_BATCH_SIZE: 10
+      _APP_GRAPHQL_MAX_COMPLEXITY: 250
+      _APP_GRAPHQL_MAX_DEPTH: 3
+    volumes:
+      - appwrite-uploads:/storage/uploads:rw
+      - appwrite-cache:/storage/cache:rw
+      - appwrite-config:/storage/config:rw
+      - appwrite-certificates:/storage/certificates:rw
+      - appwrite-functions:/storage/functions:rw
+    depends_on:
+      - mariadb
+      - redis
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: open-tech-lab-mariadb
+    restart: unless-stopped
+    networks:
+      - appwrite
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: appwrite
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - appwrite-mariadb:/var/lib/mysql:rw
+    command: 'mysqld --innodb-flush-method=fsync'
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: open-tech-lab-redis
+    restart: unless-stopped
+    networks:
+      - appwrite
+    volumes:
+      - appwrite-redis:/data:rw
+    command: >
+      redis-server
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+
+networks:
+  appwrite:
+
+volumes:
+  appwrite-mariadb:
+  appwrite-redis:
+  appwrite-uploads:
+  appwrite-cache:
+  appwrite-config:
+  appwrite-certificates:
+  appwrite-functions:

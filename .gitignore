@@ -1,3 +1,7 @@
+appwrite/
+.wrangler/
+cookies.txt
+
 # Logs
 logs
 *.log
