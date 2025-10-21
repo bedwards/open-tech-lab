@@ -2,6 +2,13 @@ import { AppwriteService } from '../services/appwrite';
 import { StorageService } from '../services/storage';
 import * as Y from 'yjs';
 
+interface RealtimeResponse {
+  events: string[];
+  channels: string[];
+  timestamp: string;
+  payload: unknown;
+}
+
 export class CodeEditor {
   private yDoc: Y.Doc;
   private yText: Y.Text;
@@ -84,7 +91,7 @@ export class CodeEditor {
 
   private setupCollaboration(projectId: string): void {
     // Subscribe to real-time updates
-    this.appwrite.subscribeToProject(projectId, (response) => {
+    this.appwrite.subscribeToProject(projectId, (response: RealtimeResponse) => {
       console.log('Real-time update:', response);
       // Apply CRDT updates
       this.applyRemoteChanges(response.payload);
@@ -103,7 +110,7 @@ export class CodeEditor {
     });
   }
 
-  private applyRemoteChanges(payload: any): void {
+  private applyRemoteChanges(payload: unknown): void {
     // Implement CRDT merge logic
     console.log('Applying remote changes:', payload);
   }

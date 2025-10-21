@@ -1,6 +1,6 @@
 export async function trackEvent(
   eventName: string,
-  properties: Record<string, any>,
+  properties: Record<string, unknown>,
   kv: KVNamespace
 ): Promise<void> {
   const timestamp = Date.now();
@@ -19,7 +19,10 @@ export async function trackEvent(
   );
 }
 
-export async function getAnalyticsSummary(kv: KVNamespace): Promise<any> {
+export async function getAnalyticsSummary(kv: KVNamespace): Promise<{
+  totalEvents: number;
+  events: unknown[];
+}> {
   const list = await kv.list({ prefix: '' });
 
   const events = await Promise.all(

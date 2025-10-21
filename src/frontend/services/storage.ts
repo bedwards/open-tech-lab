@@ -1,26 +1,30 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
 
+interface ProjectData {
+  id: string;
+  name: string;
+  description: string;
+  files: Record<string, string>;
+  lastSynced: number;
+  pendingChanges: boolean;
+}
+
+interface PendingSyncData {
+  id: string;
+  projectId: string;
+  action: 'create' | 'update' | 'delete';
+  data: unknown;
+  timestamp: number;
+}
+
 interface OpenTechLabDB extends DBSchema {
   projects: {
     key: string;
-    value: {
-      id: string;
-      name: string;
-      description: string;
-      files: Record<string, string>;
-      lastSynced: number;
-      pendingChanges: boolean;
-    };
+    value: ProjectData;
   };
   pendingSync: {
     key: string;
-    value: {
-      id: string;
-      projectId: string;
-      action: 'create' | 'update' | 'delete';
-      data: any;
-      timestamp: number;
-    };
+    value: PendingSyncData;
   };
 }
 
@@ -41,21 +45,24 @@ export class StorageService {
     });
   }
 
-  async saveProject(project: any): Promise<void> {
+  async saveProject(project: Partial<ProjectData> & { id: string }): Promise<void> {
     if (!this.db) await this.init();
     await this.db!.put('projects', {
       ...project,
+      name: project.name || '',
+      description: project.description || '',
+      files: project.files || {},
       lastSynced: Date.now(),
       pendingChanges: false,
     });
   }
 
-  async getProject(id: string): Promise<any> {
+  async getProject(id: string): Promise<ProjectData | undefined> {
     if (!this.db) await this.init();
     return await this.db!.get('projects', id);
   }
 
-  async getAllProjects(): Promise<any[]> {
+  async getAllProjects(): Promise<ProjectData[]> {
     if (!this.db) await this.init();
     return await this.db!.getAll('projects');
   }
@@ -68,7 +75,7 @@ export class StorageService {
   async addPendingSync(
     action: 'create' | 'update' | 'delete',
     projectId: string,
-    data: any
+    data: unknown
   ): Promise<void> {
     if (!this.db) await this.init();
     await this.db!.add('pendingSync', {
@@ -80,7 +87,7 @@ export class StorageService {
     });
   }
 
-  async getPendingSync(): Promise<any[]> {
+  async getPendingSync(): Promise<PendingSyncData[]> {
     if (!this.db) await this.init();
     return await this.db!.getAll('pendingSync');
   }

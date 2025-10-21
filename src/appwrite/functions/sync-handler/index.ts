@@ -1,6 +1,22 @@
-export default async ({ req, res, log, error }: any) => {
+interface AppwriteContext {
+  req: {
+    body: string;
+  };
+  res: {
+    json: (data: unknown, status?: number) => void;
+  };
+  log: (...args: unknown[]) => void;
+  error: (...args: unknown[]) => void;
+}
+
+interface SyncPayload {
+  event: string;
+  [key: string]: unknown;
+}
+
+export default async ({ req, res, log, error }: AppwriteContext) => {
   try {
-    const payload = JSON.parse(req.body || '{}');
+    const payload = JSON.parse(req.body || '{}') as SyncPayload;
 
     log('Sync event received:', payload);
 
@@ -16,7 +32,7 @@ export default async ({ req, res, log, error }: any) => {
   }
 };
 
-async function syncToSQLite(payload: any): Promise<void> {
+async function syncToSQLite(payload: SyncPayload): Promise<void> {
   // Sync changes to SQLite database
   console.log('Syncing to SQLite:', payload);
   // Implementation would use Drizzle ORM to update SQLite

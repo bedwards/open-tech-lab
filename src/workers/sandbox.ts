@@ -41,7 +41,7 @@ export class SandboxObject {
 
     const logs: string[] = [];
     const customConsole = {
-      log: (...args: any[]) => {
+      log: (...args: unknown[]) => {
         logs.push(args.map(String).join(' '));
       },
     };

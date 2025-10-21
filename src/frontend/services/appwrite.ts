@@ -9,6 +9,13 @@ export interface Project {
   updatedAt: string;
 }
 
+interface RealtimePayload {
+  events: string[];
+  channels: string[];
+  timestamp: string;
+  payload: unknown;
+}
+
 export class AppwriteService {
   private client: Client;
   private account: Account;
@@ -62,14 +69,14 @@ export class AppwriteService {
     return await this.databases.deleteDocument('main', 'projects', id);
   }
 
-  subscribeToProject(projectId: string, callback: (payload: any) => void) {
+  subscribeToProject(projectId: string, callback: (payload: RealtimePayload) => void) {
     return this.realtime.subscribe(
       `databases.main.collections.projects.documents.${projectId}`,
       callback
     );
   }
 
-  async executeFunction(functionId: string, data: any) {
+  async executeFunction(functionId: string, data: unknown) {
     return await this.functions.createExecution(functionId, JSON.stringify(data));
   }
 }

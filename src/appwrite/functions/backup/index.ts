@@ -1,4 +1,12 @@
-export default async ({ res, log, error }: any) => {
+interface AppwriteContext {
+  res: {
+    json: (data: unknown, status?: number) => void;
+  };
+  log: (...args: unknown[]) => void;
+  error: (...args: unknown[]) => void;
+}
+
+export default async ({ res, log, error }: AppwriteContext) => {
   try {
     log('Starting backup process...');
 
