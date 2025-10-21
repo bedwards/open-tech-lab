@@ -1,8 +1,24 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+// Mock fetch globally
+/*global global*/
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 describe('Worker API', () => {
+  beforeEach(() => {
+    mockFetch.mockReset();
+  });
+
   it('should handle sandbox execution', async () => {
     const code = 'console.log("Hello World")';
+
+    // Mock successful response
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ success: true, output: 'Hello World' }),
+    });
+
     const response = await fetch('http://localhost:8787/api/sandbox/execute', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -15,9 +31,20 @@ describe('Worker API', () => {
   });
 
   it('should handle analytics requests', async () => {
+    // Mock successful analytics response
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        visits: 100,
+        users: 50,
+        projects: 25,
+      }),
+    });
+
     const response = await fetch('http://localhost:8787/api/analytics');
     expect(response.ok).toBe(true);
     const data = await response.json();
     expect(data).toBeDefined();
+    expect(data.visits).toBeDefined();
   });
 });
