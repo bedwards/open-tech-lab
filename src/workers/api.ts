@@ -129,7 +129,7 @@ async function aggregateAnalytics(env: Env): Promise<void> {
   await env.CACHE.put('analytics:daily', JSON.stringify(analytics));
 }
 
-async function triggerBackup(env: Env): Promise<void> {
+async function triggerBackup(_env: Env): Promise<void> {
   // Trigger Fly.io backup via API
   console.log('Triggering backup...');
   // Implementation would call Fly.io API

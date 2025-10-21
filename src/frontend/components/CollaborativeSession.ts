@@ -11,7 +11,7 @@ export class CollaborativeSession {
 
   connect(wsUrl: string): void {
     this.provider = new WebsocketProvider(wsUrl, this.roomId, this.yDoc);
-    
+
     this.provider.on('status', (event: { status: string }) => {
       console.log('WebSocket status:', event.status);
     });

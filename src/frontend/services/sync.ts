@@ -27,7 +27,7 @@ export class SyncService {
 
   async syncPendingChanges(): Promise<void> {
     const pending = await this.storage.getPendingSync();
-    
+
     for (const item of pending) {
       try {
         switch (item.action) {
@@ -41,7 +41,7 @@ export class SyncService {
             await this.appwrite.deleteProject(item.projectId);
             break;
         }
-        
+
         await this.storage.clearPendingSync(item.id);
       } catch (error) {
         console.error('Sync failed for item:', item.id, error);

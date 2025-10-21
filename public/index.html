@@ -1,39 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Open Tech Lab - A self-hosted, community-driven tech workspace">
-  <title>Open Tech Lab</title>
-  <link rel="stylesheet" href="/src/frontend/styles/main.css">
-</head>
-<body>
-  <div id="app">
-    <header class="header">
-      <h1>Open Tech Lab</h1>
-      <nav class="nav">
-        <button id="projects-btn">Projects</button>
-        <button id="docs-btn">Docs</button>
-        <button id="plugins-btn">Plugins</button>
-        <button id="analytics-btn">Analytics</button>
-      </nav>
-      <div class="user-actions">
-        <button id="login-btn">Login</button>
-        <button id="signup-btn">Sign Up</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Open Tech Lab - A self-hosted, community-driven tech workspace"
+    />
+    <title>Open Tech Lab</title>
+    <link rel="stylesheet" href="/src/frontend/styles/main.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <h1>Open Tech Lab</h1>
+        <nav class="nav">
+          <button id="projects-btn">Projects</button>
+          <button id="docs-btn">Docs</button>
+          <button id="plugins-btn">Plugins</button>
+          <button id="analytics-btn">Analytics</button>
+        </nav>
+        <div class="user-actions">
+          <button id="login-btn">Login</button>
+          <button id="signup-btn">Sign Up</button>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div id="project-list"></div>
+        <div id="code-editor" style="display: none"></div>
+        <div id="analytics-dashboard" style="display: none"></div>
+      </main>
+
+      <div id="offline-indicator" class="offline-indicator" style="display: none">
+        <span>🔴 Offline Mode</span>
       </div>
-    </header>
-    
-    <main class="main-content">
-      <div id="project-list"></div>
-      <div id="code-editor" style="display: none;"></div>
-      <div id="analytics-dashboard" style="display: none;"></div>
-    </main>
-    
-    <div id="offline-indicator" class="offline-indicator" style="display: none;">
-      <span>🔴 Offline Mode</span>
     </div>
-  </div>
-  
-  <script type="module" src="/src/frontend/main.ts"></script>
-</body>
+
+    <script type="module" src="/src/frontend/main.ts"></script>
+  </body>
 </html>

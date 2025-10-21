@@ -65,7 +65,11 @@ export class StorageService {
     await this.db!.delete('projects', id);
   }
 
-  async addPendingSync(action: 'create' | 'update' | 'delete', projectId: string, data: any): Promise<void> {
+  async addPendingSync(
+    action: 'create' | 'update' | 'delete',
+    projectId: string,
+    data: any
+  ): Promise<void> {
     if (!this.db) await this.init();
     await this.db!.add('pendingSync', {
       id: crypto.randomUUID(),

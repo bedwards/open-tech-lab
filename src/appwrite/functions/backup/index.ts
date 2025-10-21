@@ -1,10 +1,10 @@
-export default async ({ req, res, log, error }: any) => {
+export default async ({ res, log, error }: any) => {
   try {
     log('Starting backup process...');
 
     // Create SQLite backup
     const backupPath = await createBackup();
-    
+
     // Upload to Fly.io volume
     await uploadBackup(backupPath);
 

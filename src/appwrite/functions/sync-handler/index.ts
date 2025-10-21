@@ -1,7 +1,7 @@
 export default async ({ req, res, log, error }: any) => {
   try {
     const payload = JSON.parse(req.body || '{}');
-    
+
     log('Sync event received:', payload);
 
     // Handle document changes

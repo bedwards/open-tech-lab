@@ -73,7 +73,7 @@ export class CodeEditor {
     }
 
     document.getElementById('project-name')!.textContent = project.name;
-    
+
     // Load first file
     const firstFile = Object.keys(project.files)[0];
     if (firstFile) {
@@ -130,7 +130,7 @@ export class CodeEditor {
           files: { 'main.js': content },
         });
       }
-      
+
       alert('Saved!');
     } catch (error) {
       console.error('Save failed:', error);

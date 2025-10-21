@@ -46,12 +46,7 @@ export class AppwriteService {
   }
 
   async createProject(project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) {
-    return await this.databases.createDocument(
-      'main',
-      'projects',
-      'unique()',
-      project
-    );
+    return await this.databases.createDocument('main', 'projects', 'unique()', project);
   }
 
   async getProjects(): Promise<Project[]> {

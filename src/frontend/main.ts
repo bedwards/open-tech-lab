@@ -17,11 +17,11 @@ class App {
     this.appwrite = new AppwriteService();
     this.storage = new StorageService();
     this.sync = new SyncService(this.appwrite, this.storage);
-    
+
     this.projectList = new ProjectList(this.appwrite, this.storage);
     this.codeEditor = new CodeEditor(this.appwrite, this.storage);
     this.analyticsDashboard = new AnalyticsDashboard();
-    
+
     this.init();
   }
 
@@ -77,7 +77,7 @@ class App {
     document.getElementById('project-list')!.style.display = 'block';
     document.getElementById('code-editor')!.style.display = 'none';
     document.getElementById('analytics-dashboard')!.style.display = 'none';
-    
+
     this.projectList.render(document.getElementById('project-list')!);
   }
 
@@ -85,7 +85,7 @@ class App {
     document.getElementById('project-list')!.style.display = 'none';
     document.getElementById('code-editor')!.style.display = 'none';
     document.getElementById('analytics-dashboard')!.style.display = 'block';
-    
+
     this.analyticsDashboard.render(document.getElementById('analytics-dashboard')!);
   }
 

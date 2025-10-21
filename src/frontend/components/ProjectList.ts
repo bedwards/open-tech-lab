@@ -17,7 +17,7 @@ export class ProjectList {
     `;
 
     const projectsContainer = container.querySelector('#projects-container')!;
-    
+
     // Try to load from server first, fallback to local storage
     let projects: Project[];
     try {
@@ -72,7 +72,7 @@ export class ProjectList {
     if (!name) return;
 
     const description = prompt('Description:');
-    
+
     const project = {
       name,
       description: description || '',
@@ -84,10 +84,15 @@ export class ProjectList {
         await this.appwrite.createProject(project);
       } else {
         const id = crypto.randomUUID();
-        await this.storage.saveProject({ ...project, id, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+        await this.storage.saveProject({
+          ...project,
+          id,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
         await this.storage.addPendingSync('create', id, project);
       }
-      
+
       // Refresh list
       this.render(document.getElementById('project-list')!);
     } catch (error) {

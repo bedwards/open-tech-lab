@@ -21,7 +21,7 @@ export async function trackEvent(
 
 export async function getAnalyticsSummary(kv: KVNamespace): Promise<any> {
   const list = await kv.list({ prefix: '' });
-  
+
   const events = await Promise.all(
     list.keys.map(async (key) => {
       const value = await kv.get(key.name, 'json');

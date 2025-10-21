@@ -38,7 +38,7 @@ export class SandboxObject {
   private async executeCode(code: string): Promise<string> {
     // Sandboxed code execution
     // In production, this would use QuickJS or AssemblyScript WASM
-    
+
     const logs: string[] = [];
     const customConsole = {
       log: (...args: any[]) => {

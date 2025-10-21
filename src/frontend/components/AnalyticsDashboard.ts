@@ -27,7 +27,7 @@ export class AnalyticsDashboard {
     try {
       const response = await fetch('/api/analytics');
       const data = await response.json();
-      
+
       console.log('Analytics data:', data);
       // Render charts with data
     } catch (error) {

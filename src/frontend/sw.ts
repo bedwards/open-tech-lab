@@ -1,30 +1,23 @@
 /// <reference lib="webworker" />
 
 const CACHE_NAME = 'open-tech-lab-v1';
-const STATIC_CACHE = [
-  '/',
-  '/index.html',
-  '/src/frontend/main.ts',
-  '/src/frontend/styles/main.css',
-];
+const STATIC_CACHE = ['/', '/index.html', '/src/frontend/main.ts', '/src/frontend/styles/main.css'];
 
 declare const self: ServiceWorkerGlobalScope;
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_CACHE))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_CACHE)));
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) =>
-      Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
+    caches
+      .keys()
+      .then((cacheNames) =>
+        Promise.all(
+          cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
+        )
       )
-    )
   );
 });
 
